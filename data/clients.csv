@@ -1,0 +1,5 @@
+client_id,client_name,accuracy_sla,timeliness_sla_hours,contracted_weekly_scans
+C001,NorthMart,0.965,24,46
+C002,FreshBasket,0.97,18,37
+C003,ValueHub,0.955,30,47
+C004,UrbanGoods,0.96,20,41

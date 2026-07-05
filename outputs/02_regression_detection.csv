@@ -1,0 +1,12 @@
+client_name,firmware_version,current_runs,current_accuracy,prior_accuracy,accuracy_delta_points,on_time_delta_points,issue_rate_delta_points,regression_status
+FreshBasket,4.9.0,36,0.9598,0.9777,-1.79,2.8,44.4,investigate_now
+ValueHub,4.9.0,36,0.9488,0.9591,-1.03,-5.6,38.9,investigate_now
+ValueHub,4.8.1,24,0.9479,0.9568,-0.89,-8.5,21.3,investigate_now
+ValueHub,4.8.2,38,0.9494,0.9568,-0.73,-5.3,33.6,investigate_now
+UrbanGoods,4.8.2,24,0.9609,0.9597,0.12,-0.3,8.7,watchlist
+FreshBasket,4.8.2,12,0.9735,0.9681,0.54,0.0,8.3,watchlist
+NorthMart,4.9.0,46,0.9665,0.9693,-0.27,0.0,2.3,stable
+NorthMart,4.8.1,48,0.966,0.9676,-0.16,2.2,-9.2,stable
+UrbanGoods,4.8.1,65,0.9627,0.9629,-0.01,-2.8,7.4,stable
+FreshBasket,4.8.1,46,0.973,0.9724,0.06,-2.2,4.3,stable
+UrbanGoods,4.9.0,12,0.9661,0.9615,0.45,7.1,-14.3,stable

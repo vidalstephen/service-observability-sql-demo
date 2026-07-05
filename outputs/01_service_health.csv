@@ -1,0 +1,5 @@
+client_name,scan_runs,avg_accuracy,accuracy_sla_attainment_pct,timeliness_sla_attainment_pct,avg_processing_hours,issue_count,service_status
+ValueHub,98,0.9488,37.8,92.9,17.7,37,red
+FreshBasket,94,0.968,45.7,87.2,14.7,23,red
+NorthMart,94,0.9662,52.1,100.0,14.2,4,red
+UrbanGoods,101,0.9627,62.4,96.0,14.2,9,red

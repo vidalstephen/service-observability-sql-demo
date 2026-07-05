@@ -1,0 +1,5 @@
+client_name,observed_weekly_runs,contracted_weekly_scans,avg_labels_per_run,backlog_rate_pct,forecast_runs_next_week,forecast_labels_next_week,estimated_labeler_days,capacity_recommendation
+ValueHub,49.0,47,1393.0,33.7,51.7,72039.0,80.0,add_capacity_and_review_queue_health
+NorthMart,47.0,46,1150.0,1.1,50.6,58201.0,64.7,capacity_ok
+UrbanGoods,50.5,41,1182.0,1.0,45.1,53296.0,59.2,capacity_ok
+FreshBasket,47.0,37,1195.0,2.1,40.7,48634.0,54.0,capacity_ok

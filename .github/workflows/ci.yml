@@ -1,0 +1,23 @@
+name: demo-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  run-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run SQL observability demo
+        run: python3 scripts/run_analysis.py
+      - name: Verify generated outputs
+        run: |
+          test -s outputs/service_observability.sqlite
+          test -s outputs/generated_report.md
+          test -s outputs/service_health_dashboard.html
+          grep -q "Regression detection" outputs/generated_report.md
+          grep -q "Service Observability Dashboard" outputs/service_health_dashboard.html
