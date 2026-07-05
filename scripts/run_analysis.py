@@ -86,9 +86,10 @@ def write_html(results: dict[str, tuple[list[str], list[tuple]]]) -> None:
                 if str(cell) in {"red", "yellow", "green", "investigate_now", "watchlist", "stable"}:
                     cls = status_class(str(cell))
             body.append("<tr class='%s'>%s</tr>" % (cls, "".join(f"<td>{html.escape(str(c))}</td>" for c in row)))
-        return "<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (
+        raw_table = "<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (
             "".join(f"<th>{html.escape(h)}</th>" for h in headers), "\n".join(body)
         )
+        return f'<div class="table-scroll" role="region" aria-label="Scrollable data table">{raw_table}</div>'
 
     html_doc = f"""<!doctype html>
 <html lang="en">
@@ -96,20 +97,38 @@ def write_html(results: dict[str, tuple[list[str], list[tuple]]]) -> None:
 <meta charset="utf-8" />
 <title>Service Observability Dashboard</title>
 <style>
+* {{ box-sizing: border-box; }}
 body {{ font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; margin: 32px; color: #172033; background: #f6f8fb; }}
 h1 {{ margin-bottom: 0; }}
-.subtitle {{ color: #536076; margin-top: 6px; }}
-.card {{ background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 20px; margin: 18px 0; box-shadow: 0 8px 24px rgba(26,42,68,.06); }}
-table {{ border-collapse: collapse; width: 100%; font-size: 13px; }}
-th, td {{ border-bottom: 1px solid #e9edf5; padding: 8px 10px; text-align: left; vertical-align: top; }}
-th {{ color: #536076; font-weight: 700; background: #f8fafc; }}
+.subtitle {{ color: #536076; margin-top: 6px; max-width: 960px; }}
+.card {{ background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 20px; margin: 18px 0; box-shadow: 0 8px 24px rgba(26,42,68,.06); max-width: 100%; overflow: hidden; }}
+.card h2 {{ margin-top: 0; }}
+.table-scroll {{ width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; border: 1px solid #e9edf5; border-radius: 10px; }}
+.table-scroll::after {{ content: 'Scroll table horizontally →'; display: none; color: #64748b; font-size: 12px; padding: 8px 10px; border-top: 1px solid #e9edf5; background: #f8fafc; }}
+table {{ border-collapse: collapse; width: max-content; min-width: 100%; font-size: 13px; background: white; }}
+th, td {{ border-bottom: 1px solid #e9edf5; padding: 8px 10px; text-align: left; vertical-align: top; white-space: nowrap; }}
+th {{ color: #536076; font-weight: 700; background: #f8fafc; position: sticky; top: 0; z-index: 1; }}
+td:last-child, th:last-child {{ white-space: normal; min-width: 150px; }}
+tr:last-child td {{ border-bottom: 0; }}
 tr.bad td:first-child::before {{ content: '● '; color: #dc2626; }}
 tr.warn td:first-child::before {{ content: '● '; color: #d97706; }}
 tr.good td:first-child::before {{ content: '● '; color: #16a34a; }}
-.kpis {{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }}
-.kpi {{ background: #0f172a; color:white; border-radius: 12px; padding: 16px; }}
+.kpis {{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }}
+.kpi {{ background: #0f172a; color:white; border-radius: 12px; padding: 16px; min-width: 0; }}
 .kpi b {{ display:block; font-size: 24px; }}
-.note {{ background:#fff7ed; border-left:4px solid #f97316; padding:12px 14px; }}
+.note {{ background:#fff7ed; border-left:4px solid #f97316; padding:12px 14px; max-width: 100%; }}
+@media (max-width: 760px) {{
+  body {{ margin: 14px; }}
+  h1 {{ font-size: 26px; line-height: 1.1; }}
+  .kpis {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+  .card {{ padding: 14px; border-radius: 12px; }}
+  .table-scroll::after {{ display: block; }}
+  table {{ font-size: 12px; }}
+  th, td {{ padding: 7px 8px; }}
+}}
+@media (max-width: 420px) {{
+  .kpis {{ grid-template-columns: 1fr; }}
+}}
 </style>
 </head>
 <body>

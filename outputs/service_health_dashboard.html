@@ -4,20 +4,38 @@
 <meta charset="utf-8" />
 <title>Service Observability Dashboard</title>
 <style>
+* { box-sizing: border-box; }
 body { font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; margin: 32px; color: #172033; background: #f6f8fb; }
 h1 { margin-bottom: 0; }
-.subtitle { color: #536076; margin-top: 6px; }
-.card { background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 20px; margin: 18px 0; box-shadow: 0 8px 24px rgba(26,42,68,.06); }
-table { border-collapse: collapse; width: 100%; font-size: 13px; }
-th, td { border-bottom: 1px solid #e9edf5; padding: 8px 10px; text-align: left; vertical-align: top; }
-th { color: #536076; font-weight: 700; background: #f8fafc; }
+.subtitle { color: #536076; margin-top: 6px; max-width: 960px; }
+.card { background: white; border: 1px solid #dfe5ef; border-radius: 14px; padding: 20px; margin: 18px 0; box-shadow: 0 8px 24px rgba(26,42,68,.06); max-width: 100%; overflow: hidden; }
+.card h2 { margin-top: 0; }
+.table-scroll { width: 100%; max-width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; border: 1px solid #e9edf5; border-radius: 10px; }
+.table-scroll::after { content: 'Scroll table horizontally →'; display: none; color: #64748b; font-size: 12px; padding: 8px 10px; border-top: 1px solid #e9edf5; background: #f8fafc; }
+table { border-collapse: collapse; width: max-content; min-width: 100%; font-size: 13px; background: white; }
+th, td { border-bottom: 1px solid #e9edf5; padding: 8px 10px; text-align: left; vertical-align: top; white-space: nowrap; }
+th { color: #536076; font-weight: 700; background: #f8fafc; position: sticky; top: 0; z-index: 1; }
+td:last-child, th:last-child { white-space: normal; min-width: 150px; }
+tr:last-child td { border-bottom: 0; }
 tr.bad td:first-child::before { content: '● '; color: #dc2626; }
 tr.warn td:first-child::before { content: '● '; color: #d97706; }
 tr.good td:first-child::before { content: '● '; color: #16a34a; }
-.kpis { display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.kpi { background: #0f172a; color:white; border-radius: 12px; padding: 16px; }
+.kpis { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: #0f172a; color:white; border-radius: 12px; padding: 16px; min-width: 0; }
 .kpi b { display:block; font-size: 24px; }
-.note { background:#fff7ed; border-left:4px solid #f97316; padding:12px 14px; }
+.note { background:#fff7ed; border-left:4px solid #f97316; padding:12px 14px; max-width: 100%; }
+@media (max-width: 760px) {
+  body { margin: 14px; }
+  h1 { font-size: 26px; line-height: 1.1; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { padding: 14px; border-radius: 12px; }
+  .table-scroll::after { display: block; }
+  table { font-size: 12px; }
+  th, td { padding: 7px 8px; }
+}
+@media (max-width: 420px) {
+  .kpis { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -29,11 +47,11 @@ tr.good td:first-child::before { content: '● '; color: #16a34a; }
   <div class="kpi"><span>Root-cause groups</span><b>35</b></div>
   <div class="kpi"><span>Capacity watch items</span><b>1</b></div>
 </div>
-<div class="card"><h2>Client service health</h2><table><thead><tr><th>client_name</th><th>scan_runs</th><th>avg_accuracy</th><th>accuracy_sla_attainment_pct</th><th>timeliness_sla_attainment_pct</th><th>avg_processing_hours</th><th>issue_count</th><th>service_status</th></tr></thead><tbody><tr class='bad'><td>ValueHub</td><td>98</td><td>0.9488</td><td>37.8</td><td>92.9</td><td>17.7</td><td>37</td><td>red</td></tr>
+<div class="card"><h2>Client service health</h2><div class="table-scroll" role="region" aria-label="Scrollable data table"><table><thead><tr><th>client_name</th><th>scan_runs</th><th>avg_accuracy</th><th>accuracy_sla_attainment_pct</th><th>timeliness_sla_attainment_pct</th><th>avg_processing_hours</th><th>issue_count</th><th>service_status</th></tr></thead><tbody><tr class='bad'><td>ValueHub</td><td>98</td><td>0.9488</td><td>37.8</td><td>92.9</td><td>17.7</td><td>37</td><td>red</td></tr>
 <tr class='bad'><td>FreshBasket</td><td>94</td><td>0.968</td><td>45.7</td><td>87.2</td><td>14.7</td><td>23</td><td>red</td></tr>
 <tr class='bad'><td>NorthMart</td><td>94</td><td>0.9662</td><td>52.1</td><td>100.0</td><td>14.2</td><td>4</td><td>red</td></tr>
-<tr class='bad'><td>UrbanGoods</td><td>101</td><td>0.9627</td><td>62.4</td><td>96.0</td><td>14.2</td><td>9</td><td>red</td></tr></tbody></table></div>
-<div class="card"><h2>Regression detection</h2><table><thead><tr><th>client_name</th><th>firmware_version</th><th>current_runs</th><th>current_accuracy</th><th>prior_accuracy</th><th>accuracy_delta_points</th><th>on_time_delta_points</th><th>issue_rate_delta_points</th><th>regression_status</th></tr></thead><tbody><tr class='bad'><td>FreshBasket</td><td>4.9.0</td><td>36</td><td>0.9598</td><td>0.9777</td><td>-1.79</td><td>2.8</td><td>44.4</td><td>investigate_now</td></tr>
+<tr class='bad'><td>UrbanGoods</td><td>101</td><td>0.9627</td><td>62.4</td><td>96.0</td><td>14.2</td><td>9</td><td>red</td></tr></tbody></table></div></div>
+<div class="card"><h2>Regression detection</h2><div class="table-scroll" role="region" aria-label="Scrollable data table"><table><thead><tr><th>client_name</th><th>firmware_version</th><th>current_runs</th><th>current_accuracy</th><th>prior_accuracy</th><th>accuracy_delta_points</th><th>on_time_delta_points</th><th>issue_rate_delta_points</th><th>regression_status</th></tr></thead><tbody><tr class='bad'><td>FreshBasket</td><td>4.9.0</td><td>36</td><td>0.9598</td><td>0.9777</td><td>-1.79</td><td>2.8</td><td>44.4</td><td>investigate_now</td></tr>
 <tr class='bad'><td>ValueHub</td><td>4.9.0</td><td>36</td><td>0.9488</td><td>0.9591</td><td>-1.03</td><td>-5.6</td><td>38.9</td><td>investigate_now</td></tr>
 <tr class='bad'><td>ValueHub</td><td>4.8.1</td><td>24</td><td>0.9479</td><td>0.9568</td><td>-0.89</td><td>-8.5</td><td>21.3</td><td>investigate_now</td></tr>
 <tr class='bad'><td>ValueHub</td><td>4.8.2</td><td>38</td><td>0.9494</td><td>0.9568</td><td>-0.73</td><td>-5.3</td><td>33.6</td><td>investigate_now</td></tr>
@@ -43,8 +61,8 @@ tr.good td:first-child::before { content: '● '; color: #16a34a; }
 <tr class='good'><td>NorthMart</td><td>4.8.1</td><td>48</td><td>0.966</td><td>0.9676</td><td>-0.16</td><td>2.2</td><td>-9.2</td><td>stable</td></tr>
 <tr class='good'><td>UrbanGoods</td><td>4.8.1</td><td>65</td><td>0.9627</td><td>0.9629</td><td>-0.01</td><td>-2.8</td><td>7.4</td><td>stable</td></tr>
 <tr class='good'><td>FreshBasket</td><td>4.8.1</td><td>46</td><td>0.973</td><td>0.9724</td><td>0.06</td><td>-2.2</td><td>4.3</td><td>stable</td></tr>
-<tr class='good'><td>UrbanGoods</td><td>4.9.0</td><td>12</td><td>0.9661</td><td>0.9615</td><td>0.45</td><td>7.1</td><td>-14.3</td><td>stable</td></tr></tbody></table></div>
-<div class="card"><h2>Root-cause patterns</h2><table><thead><tr><th>client_name</th><th>issue_category</th><th>firmware_version</th><th>affected_runs</th><th>accuracy_misses</th><th>timeliness_misses</th><th>avg_labels_required</th><th>avg_processing_hours</th><th>affected_stores</th></tr></thead><tbody><tr class=''><td>UrbanGoods</td><td>none</td><td>4.8.1</td><td>21</td><td>21</td><td>1</td><td>1165.0</td><td>13.8</td><td>C004-S01,C004-S03,C004-S02</td></tr>
+<tr class='good'><td>UrbanGoods</td><td>4.9.0</td><td>12</td><td>0.9661</td><td>0.9615</td><td>0.45</td><td>7.1</td><td>-14.3</td><td>stable</td></tr></tbody></table></div></div>
+<div class="card"><h2>Root-cause patterns</h2><div class="table-scroll" role="region" aria-label="Scrollable data table"><table><thead><tr><th>client_name</th><th>issue_category</th><th>firmware_version</th><th>affected_runs</th><th>accuracy_misses</th><th>timeliness_misses</th><th>avg_labels_required</th><th>avg_processing_hours</th><th>affected_stores</th></tr></thead><tbody><tr class=''><td>UrbanGoods</td><td>none</td><td>4.8.1</td><td>21</td><td>21</td><td>1</td><td>1165.0</td><td>13.8</td><td>C004-S01,C004-S03,C004-S02</td></tr>
 <tr class=''><td>NorthMart</td><td>none</td><td>4.8.1</td><td>21</td><td>21</td><td>0</td><td>1121.0</td><td>13.8</td><td>C001-S02,C001-S01,C001-S03</td></tr>
 <tr class=''><td>FreshBasket</td><td>none</td><td>4.8.1</td><td>21</td><td>19</td><td>3</td><td>1166.0</td><td>14.8</td><td>C002-S01,C002-S02,C002-S04</td></tr>
 <tr class=''><td>NorthMart</td><td>none</td><td>4.9.0</td><td>20</td><td>20</td><td>0</td><td>1168.0</td><td>14.3</td><td>C001-S01,C001-S04,C001-S03</td></tr>
@@ -63,11 +81,11 @@ tr.good td:first-child::before { content: '● '; color: #16a34a; }
 <tr class=''><td>FreshBasket</td><td>store_access_delay</td><td>4.8.1</td><td>2</td><td>0</td><td>2</td><td>937.0</td><td>25.9</td><td>C002-S01,C002-S02</td></tr>
 <tr class=''><td>FreshBasket</td><td>labeling_backlog</td><td>4.8.1</td><td>2</td><td>0</td><td>2</td><td>1995.0</td><td>24.5</td><td>C002-S04,C002-S01</td></tr>
 <tr class=''><td>UrbanGoods</td><td>planogram_mismatch</td><td>4.8.1</td><td>2</td><td>0</td><td>0</td><td>1370.0</td><td>15.8</td><td>C004-S02</td></tr>
-<tr class=''><td>UrbanGoods</td><td>late_ingestion</td><td>4.8.1</td><td>1</td><td>1</td><td>1</td><td>1106.0</td><td>24.6</td><td>C004-S01</td></tr></tbody></table></div>
-<div class="card"><h2>Capacity forecast</h2><table><thead><tr><th>client_name</th><th>observed_weekly_runs</th><th>contracted_weekly_scans</th><th>avg_labels_per_run</th><th>backlog_rate_pct</th><th>forecast_runs_next_week</th><th>forecast_labels_next_week</th><th>estimated_labeler_days</th><th>capacity_recommendation</th></tr></thead><tbody><tr class=''><td>ValueHub</td><td>49.0</td><td>47</td><td>1393.0</td><td>33.7</td><td>51.7</td><td>72039.0</td><td>80.0</td><td>add_capacity_and_review_queue_health</td></tr>
+<tr class=''><td>UrbanGoods</td><td>late_ingestion</td><td>4.8.1</td><td>1</td><td>1</td><td>1</td><td>1106.0</td><td>24.6</td><td>C004-S01</td></tr></tbody></table></div></div>
+<div class="card"><h2>Capacity forecast</h2><div class="table-scroll" role="region" aria-label="Scrollable data table"><table><thead><tr><th>client_name</th><th>observed_weekly_runs</th><th>contracted_weekly_scans</th><th>avg_labels_per_run</th><th>backlog_rate_pct</th><th>forecast_runs_next_week</th><th>forecast_labels_next_week</th><th>estimated_labeler_days</th><th>capacity_recommendation</th></tr></thead><tbody><tr class=''><td>ValueHub</td><td>49.0</td><td>47</td><td>1393.0</td><td>33.7</td><td>51.7</td><td>72039.0</td><td>80.0</td><td>add_capacity_and_review_queue_health</td></tr>
 <tr class=''><td>NorthMart</td><td>47.0</td><td>46</td><td>1150.0</td><td>1.1</td><td>50.6</td><td>58201.0</td><td>64.7</td><td>capacity_ok</td></tr>
 <tr class=''><td>UrbanGoods</td><td>50.5</td><td>41</td><td>1182.0</td><td>1.0</td><td>45.1</td><td>53296.0</td><td>59.2</td><td>capacity_ok</td></tr>
-<tr class=''><td>FreshBasket</td><td>47.0</td><td>37</td><td>1195.0</td><td>2.1</td><td>40.7</td><td>48634.0</td><td>54.0</td><td>capacity_ok</td></tr></tbody></table></div>
+<tr class=''><td>FreshBasket</td><td>47.0</td><td>37</td><td>1195.0</td><td>2.1</td><td>40.7</td><td>48634.0</td><td>54.0</td><td>capacity_ok</td></tr></tbody></table></div></div>
 <div class="note"><strong>Analyst note:</strong> This dashboard is generated from SQL queries in the repository. In a production BI tool, these queries would become modeled tables or dashboard tiles with owner, refresh cadence, and documented SLA definitions.</div>
 </body>
 </html>
